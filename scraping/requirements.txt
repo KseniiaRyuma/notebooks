@@ -1,0 +1,9 @@
+Scrapy
+cohere
+selenium
+bs4
+beautifulsoup4
+playwright
+Pinecone
+scrapy-selenium
+langchain-text-splitters

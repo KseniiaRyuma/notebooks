@@ -1,0 +1,758 @@
+Logical Systems Overview | Junos OS | Juniper Networks
+
+
+
+
+
+
+
+
+
+
+
+
+X
+
+
+
+
+
+Help us improve your experience.
+Let us know what you think. 
+Do you have time for a two-minute survey?
+
+
+Yes
+
+
+Maybe Later
+
+
+
+
+
+
+ ON THIS PAGEUnderstanding Logical Systems for SRX Series FirewallsFeatures and Limitations of Logical SystemsUnderstanding Licenses for Logical Systems and Tenant Systems
+on SRX Series DevicesUnderstanding the Interconnect Logical System and Logical Tunnel
+InterfacesUnderstanding Packet Flow in Logical Systems for SRX Series
+DevicesLogical Systems and Tenant Systems support for vSRX Virtual Firewall and vSRX Virtual
+            Firewall 3.0 Instances 
+Logical Systems Overview
+Logical systems enable you to partition a single
+device into multiple secure contexts that perform independent tasks.
+For more information, see the following topics:
+
+
+Understanding Logical Systems for SRX Series Firewalls
+Logical systems for SRX Series Firewalls enable you to partition a single device into secure
+            contexts. Each logical system has its own discrete administrative domain, logical
+            interfaces, routing instances, security firewall and other security features. By
+            transforming an SRX Series Firewall into a multitenant logical systems device, you can
+            give various departments, organizations, customers, and partners—depending on your
+            environment—private use of portions of its resources and a private view of the device.
+            Using logical systems, you can share system and underlying physical machine resources
+            among discrete user logical systems and the primary logical system.
+The top part of Figure 1 shows the three
+main configuration components of a logical system. The lower part
+of the figure shows a single device with a primary logical system
+and discrete user logical systems. 
+Logical systems include both primary and user logical systems
+and their administrators. The roles and responsibilities of the primary
+administrator and those of a user logical system administrator differ
+greatly. This differentiation of privileges and responsibilities is
+considered role-based administration and control. 
+Figure 1: Understanding Logical Systems
+Logical systems on SRX Series Firewalls offer many benefits, allowing you to: 
+Curtail costs. Using logical systems, you can reduce the
+number of physical devices required for your company. Because you
+can consolidate services for various groups of users on a single device,
+you reduce both hardware costs and power expenditure.
+
+Create many logical systems on a single device and provision
+resources and services for them quickly. Because services are converged,
+it is easier for the primary, or root, administrator to manage a single
+device configured for logical systems than it is to manage many discrete
+devices.
+
+
+You can deploy an SRX Series Firewall running logical systems in many environments, in
+            particular, in the enterprise and in the data center.
+In the enterprise, you can create and provision logical
+systems for various departments and groups.
+You can configure logical systems to enable communication among groups sharing the device. When
+                    you create logical systems for various departments on the same device, users can
+                    communicate with one another without traffic leaving the device if you have
+                    configured an interconnect logical system to serve as an internal switch. For
+                    example, members of the product design group, the marketing department, and the
+                    accounting department sharing an SRX Series Services Gateway running logical
+                    systems can communicate with one another just as they could if separate devices
+                    were deployed for their departments. You can configure logical systems to
+                    interconnect through logical tunnel (lt-0/0/0) internal interfaces. The
+                    lt-0/0/0 interfaces on the interconnect logical system connect to an lt-0/0/0
+                    interface that you configure for each logical system. The interconnect logical
+                    system switches traffic between logical systems. The SRX Series Firewall running
+                    logical systems provides for high, fast interaction among all logical systems
+                    created on the device when an interconnect logical system is used. 
+Logical systems on the same device can also communicate with
+one another directly through ports on the device, as if they were
+separate devices. Although this method allows for direct connections
+between logical systems, it consumes more resources–you must
+configure interfaces and an external switch–and therefore it
+is more costly.
+
+In the data center, as a service provider, you can deploy an SRX Series Firewall running logical
+                    systems to offer your customers secure and private user logical systems and
+                    discrete use of the device’s resources. 
+For example, one corporation might require 10 user logical systems
+and another might require 20. Because logical systems are secure,
+private, and self-contained, data belonging to one logical system
+cannot be viewed by administrators or users of other logical systems.
+That is, employees of one corporation cannot view the logical systems
+of another corporation.
+
+SRX4100 and SRX4200 devices support logical system in
+both transparent and route mode.
+
+SRX4600 device supports logical system in route mode only.
+
+
+Note: To use the internal switch, which is optional, you must
+also configure an interconnect logical system. The interconnect logical
+system does not require an administrator. 
+
+Note: This feature requires a license. To understand more about SRX Series Firewalls license, see Software Feature Licenses for SRX Series Devices. Please
+                refer to the Juniper Licensing Guide for general information about
+                License Management. Please refer to the product Data Sheets  for details, or contact your Juniper
+                Account Team or Juniper Partner. 
+
+
+See AlsoUnderstanding the Primary Logical Systems and the
+Primary Administrator Role
+Understanding User Logical Systems and the User
+Logical System Administrator Role
+
+
+Features and Limitations of Logical Systems
+This topic covers basic information about the features and limitations
+of logical systems.
+By default, logical systems deliver a primary logical
+system, which exists at the root level. You can purchase licenses
+for logical systems that you intend to create, with the total not
+exceeding 32 (1 primary logical system and 31 user logical systems).
+
+You can configure up to 32 security profiles, from 1 through
+32, with ID 0 reserved for the internally configured default security
+profile. When the maximum number of security profiles is reached,
+if you want to add a new security profile, you must first delete one
+or more existing security profiles, commit the configuration, and
+then create the new security profile and commit it. You cannot add
+a new security profile and remove an existing one within a single
+configuration commit.
+If you want to add more than one new security profile, the same
+rule is true. You must first delete the equivalent number of of existing
+security profiles, commit the configuration, and then create the new
+security profiles and commit the configuration.
+
+You can configure one or more primary administrators to
+oversee administration of the device and the logical systems they
+configure. 
+As primary administrator for an SRX Series Services Gateway
+running logical systems, you have root control over the device, its
+resources, and the logical systems that you create. You allocate security,
+networking, and routing resources to user logical systems. You can
+configure one logical system to serve as an interconnect logical system
+virtual private LAN service (VPLS) switch. The interconnect logical
+system, which is not mandatory, does not require security resources.
+However, if you configure an interconnect logical system, you must
+bind a dummy security profile to it. The primary administrator configures
+it and all lt-0/0/0 interfaces for it. 
+
+A user logical system can have one or more administrators,
+referred to as user logical system administrators. The primary administrator
+creates login accounts for these administrators and assigns them to
+a user logical system. Currently, the primary administrator must configure
+all user logical system administrators. The first assigned user logical
+administrator cannot configure additional user logical system administrators
+for his or her logical system. As a user logical system administrator,
+you can configure the resources assigned to your user logical system,
+including logical interfaces assigned by the primary administrator,
+routing instances and their routes, and security components. You can
+display configuration information only for your logical system.
+
+A logical system can include more than one routing instance
+based on available system resources. 
+
+You cannot configure class of service on lt-0/0/0 interfaces. 
+
+Commit rollback is supported at the root level only.
+
+Quality-of-service (QoS) classification across interconnected
+logical systems does not work.
+
+The primary administrator can configure Application Layer
+Gateways (ALGs) at the root level. The configuration is inherited
+by all user logical systems. ALGs can also be configured discretely
+for user logical systems.
+
+The primary administrator can configure IDP policies at
+the root level and then apply an IDP policy to a user logical system.
+
+Only the primary administrator can create user accounts
+and login IDs for users for all logical systems. The primary administrator
+creates these user accounts at the root level and assigns them to
+the appropriate user logical systems. 
+
+The same name cannot be used in two separate logical systems.
+For example, if logical-system1 includes a user with Bob configured
+as the username, then other logical systems on the device cannot include
+a user with the username Bob.  
+
+Configuration for users for all logical systems and all
+user logical systems administrators must be performed at the root
+level by the primary administrator. A user logical system administrator
+cannot create other user logical system administrators or user accounts
+for their logical systems.
+
+Some of the scaling parameters are different for SRX1500
+devices. For example, you can configure a maximum of 512 zones under
+a logical system.
+
+
+
+See AlsoUnderstanding Logical Systems for SRX Series Services
+Gateways
+Understanding the Primary Logical Systems and the
+Primary Administrator Role
+Understanding User Logical Systems and the User
+Logical System Administrator Role
+
+
+Understanding Licenses for Logical Systems and Tenant Systems
+on SRX Series Devices
+This topic provides licensing information for SRX Series Firewalls running logical systems
+         and tenant systems.
+Starting in Junos OS Release 18.3R1, an SRX Series Firewall running logical systems or
+         tenant systems includes three licenses by default. Starting in Junos OS Releases 20.3R3,
+         20.4R2, 21.1R2, and 21.2R1, you can use the features for logical systems and tenant systems
+         without a license. One license for a primary logical system and the other two licenses for
+         user-defined logical system or tenant system. The system does not allow you to configure
+         additional logical systems or tenant systems if the number of logical systems and tenant
+         systems exceeds the number of available licenses. In the earlier releases, the system
+         allowed you to configure an additional logical system even if the number of logical systems
+         exceeds the number of available licenses, but with a warning message of non-licensed
+         logical-systems do not pass traffic. You can purchase licenses for additional logical
+         systems and tenant systems that you intend to create. If you intend to configure an
+         interconnect logical system or interconnect tenant system to use as a switch, it also
+         requires separate licenses.
+We enforce that you do not configure more logical systems or tenant systems than the number
+         of licenses you have purchased. If the number of logical systems or tenant systems that you
+         attempt to configure exceeds the number of licenses that you have purchased, then the
+         system displays an error message similar to the following:
+You can use the show system license status
+            all-logical-systems-tenants or show system license
+            usage commands to view the active logical systems and tenant systems on the
+         device.
+When you use SRX Series Firewalls running logical systems or tenant systems in a
+            chassis cluster, you must purchase and install the same number of licenses
+         for each node in the chassis cluster. Logical systems or tenant systems licenses pertain to
+         a single chassis, or node, within a chassis cluster and not to the cluster
+         collectively.
+
+See AlsoUnderstanding Logical Systems
+for SRX Series Services Gateways
+Understanding Tenant Systems
+
+
+Understanding the Interconnect Logical System and Logical Tunnel
+Interfaces
+This topic covers the interconnect logical system that serves
+as an internal virtual private LAN service (VPLS) switch connecting
+one logical system on the device to another. The topic also explains
+how logical tunnel (lt-0/0/0) interfaces are used to connect logical
+systems through the interconnect logical system. 
+A device running logical systems can use an internal VPLS switch
+to pass traffic without it leaving the device.  The interconnect logical
+system switches traffic across logical systems that use it. Although
+a virtual switch is used typically, it is not mandatory. If you choose
+to use a virtual switch, you must configure the interconnect logical
+system. There can be only one interconnect logical system on a device. 
+ For communication between logical systems on the device to
+occur, you must configure an lt-0/0/0 interface on each logical system
+that will use the internal switch, and you must associate it with
+its peer lt-0/0/0 interface on the interconnect logical system, effectively
+creating a logical tunnel between them. You define a peer relationship
+at each end of the tunnel when you configure the logical system’s
+lt-0/0/0 interfaces. 
+You might want all logical systems on the device to be able
+to communicate with one another without using an external switch.
+Alternatively, you might want some logical systems to connect across
+the internal switch but not all of them. 
+The interconnect logical system does not require security resources
+assigned to it through a security profile. However, you must assign
+a dummy security profile containing no resources to the interconnect
+logical system. Otherwise you will not be able to successfully commit
+the configuration for it.
+Warning: If you configure an lt-0/0/0 interface in any user
+logical system or the primary logical system and you do not configure
+an interconnect logical system containing a peer lt-0/0/0 interface
+for it, the commit will fail. 
+
+An SRX Series Firewall running logical systems can be used in a chassis cluster.
+            Each node has the same configuration, including the interconnect logical system. 
+When you use SRX Series Firewalls running logical systems within a chassis cluster, you must
+            purchase and install the same number of licenses for each node in the chassis cluster.
+            Logical systems licenses pertain to a single chassis, or node, within a chassis cluster
+            and not to the cluster collectively. 
+
+See AlsoRouting and Interfaces for Primary Logical Systems
+Understanding Logical Systems for SRX Series Services
+Gateways
+Understanding Logical Systems in the Context of
+Chassis Cluster
+
+
+Understanding Packet Flow in Logical Systems for SRX Series
+Devices
+This topic explains how packets are processed in flow sessions on SRX Series Firewalls running
+            logical systems. It describes how an SRX Series Firewall running logical systems handles
+            pass-through traffic in a single logical system and between logical systems. It also
+            covers self-traffic as self-initiated traffic within a logical system and self-traffic
+            terminated on another logical system. Before addressing logical systems, the topic
+            provides basic information about the SRX Series architecture in with respect to packet
+            processing and sessions. Finally, it addresses sessions and how to change session
+            characteristics.
+The concepts explained in this example rely on the topology
+shown in Figure 2.
+Figure 2: Logical Systems, Their Virtual Routers,
+and Their Interfaces
+Understanding Junos OS SRX Series Firewalls Architecture
+Session Creation for Devices Running Logical Systems
+Understanding Flow on Logical Systems
+Understanding Packet Classification
+Handling Pass-Through Traffic for Logical Systems
+Handling Self-Traffic
+Understanding Session and Gate Limitation Control
+Understanding Sessions
+About Configuring Sessions
+
+Understanding Junos OS SRX Series Firewalls ArchitectureJunos OS is a distributed parallel processing high
+throughput and high performance system. The distributed parallel processing
+architecture of the services gateways includes multiple processors
+to manage sessions and run security and other services processing.
+This architecture provides greater flexibility and allows for high
+throughput and fast performance. 
+The SRX5000 line devices include I/O cards (IOC) and Services
+Processing Cards (SPCs) that each contain processing units that process
+a packet as it traverses the device. A Network Processing Unit (NPU)
+runs on an IOC. An IOC has one or more NPUs. One or more Services
+Processing Units (SPUs) run on an SPC. 
+These processing units have different responsibilities.
+All flow-based services for a packet are executed on a single SPU.
+Otherwise, however, the lines are not clearly divided in regard to
+the kinds of services that run on these processors. (For details on
+flow-based processing, see Understanding Traffic Processing on Security Devices.)
+ For example:
+An NPU processes packets discretely. It performs sanity
+checks and applies some screens that are configured for the interface,
+such as denial-of-service (DoS) screens, to the packet.
+
+An SPU manages the session for the packet flow and applies
+security features and other services to the packet. It also applies
+packet-based stateless firewall filters, classifiers, and traffic
+shapers to the packet. 
+
+The system uses one processor as a central point to take
+care of arbitration and allocation of resources and distribute sessions
+in an intelligent way. The central point assigns an SPU to be used
+for a particular session when the first packet of its flow is processed. 
+
+
+These discrete, cooperating parts of the system,
+including the central point, each store the information identifying
+whether a session exists for a stream of packets and the information
+against which a packet is matched to determine if it belongs to an
+existing session.
+This architecture allows the device to distribute
+processing of all sessions across multiple SPUs. It also allows an
+NPU to determine if a session exists for a packet, to check the packet,
+and to apply screens to it. How a packet is handled depends on whether
+it is the first packet of a flow. 
+Flow-based packet processing treats related packets, or a stream
+of packets, in the same way. Packet treatment depends on characteristics
+that are established for the first packet of the packet stream when
+the flow session is established. Most packet processing occurs within
+a flow. For the distributed processing architecture of the services
+gateway, some packet-based processing, such as traffic shaping, occurs
+on the NPU. Some packet-based processing, such as application of classifiers
+to a packet, occurs on the SPU.
+Configuration settings that determine the fate of a packet—such
+as the security policy that applies to it, Aplication Layer Gateway
+(ALG)s configured for it, if NAT should be applied to translate the
+packet’s source and/or destination IP address—are assessed
+for the first packet of a flow.
+
+Session Creation for Devices Running Logical SystemsSession establishment for SRX Series Firewalls running logical systems differs in minor ways from
+                that of SRX Series Firewalls not running logical systems. Despite the complexities
+                that logical systems introduce, traffic is handled in a manner similar to how it is
+                handled on SRX Series Firewalls not running logical systems. Flow-based packet
+                processing, which is stateful, requires the creation of sessions. In considering
+                flow based processing and session establishment for logical systems, it helps to
+                think of each logical system on the device as a discrete device with respect to
+                session establishment.
+ A session is created, based on routing and other classification
+information, to store information and allocate resources for a flow.
+Basically, a session is established when traffic enters a logical
+system interface, route lookup is performed to identify the next hop
+interface, and policy lookup is performed. 
+Optionally, logical systems enable you to configure an internal
+software switch. This virtual private LAN switch (VPLS) is implemented
+as an interconnect logical system. It enables both transit traffic
+and traffic terminated at a logical system to pass between logical
+systems. To enable traffic to pass between logical systems, logical
+tunnel (lt-0/0/0) interfaces across the interconnect logical system
+are used.
+Communication between logical systems across the interconnect
+logical system requires establishment of two sessions: one for traffic
+that enters a logical system and exits its lt-0/0/0 interface, and
+one for traffic that enters the lt-0/0/0 interface of another logical
+system and either exits the device through one of its physical interface
+or is destined for it. 
+Note: Packet sequence occurs at the ingress and the egress interfaces.
+Packets traveling between logical systems might not be processed in
+the order in which they were received on the physical interface.
+
+
+Understanding Flow on Logical SystemsTo understand how traffic is handled for logical systems, it
+is helpful to consider each logical system as a discrete device. 
+Note: Traffic is processed for the primary logical system in the same
+way as it is for user logical systems on the device.
+
+Note:
+On SRX1400, SRX1500, SRX3400, SRX3600, SRX4100, SRX4200, SRX4600, SRX5400,
+                    SRX5600, and SRX5800 Series devices, J-Flow version 5, version 8, and version 9
+                    are not supported on logical systems.
+
+
+Understanding Packet ClassificationPacket classification is assessed the same way for SRX Series Firewalls running with or without
+                logical systems. Filters and class-of-service features are typically associated with
+                an interface to influence which packets are allowed to transit the system and to
+                apply special actions to packets as needed. (Within a flow, some packet-based
+                processing also takes place on an SPU.)
+Packet classification is based on the incoming interface and
+performed at the ingress point. Traffic for a dedicated interface
+is classified to the logical system that contains that interface.
+Within the context of a flow, packet classification is based on both
+the physical interface and the logical interface.
+
+Handling Pass-Through Traffic for Logical SystemsFor SRX Series Firewalls not running logical systems, pass-through traffic is traffic that enters
+                and exits a device. You can think of pass-through traffic for logical systems
+                similarly, but as having a larger dimension as a result of the nature of a
+                multitenant device. For SRX Series Firewalls running logical systems, pass-through
+                traffic can exist within a logical system or between logical systems. 
+Pass-Through Traffic Within a Logical System
+Pass-Through Traffic Between Logical Systems
+
+Pass-Through Traffic Within a Logical SystemFor pass-through traffic within a logical system, traffic comes
+in on an interface belonging to one of the logical system’s
+virtual routing instances, and it is sent to another of its virtual
+routing instances. To exit the device, the traffic is sent out an
+interface belonging to the second virtual routing instance. The traffic
+does not transit between logical systems but rather enters and exits
+the device in a single logical system. Pass-through traffic within
+a logical system is transmitted according to the routing tables in
+each of its routing instances. 
+Consider how pass-through traffic is handled within a logical
+system given the topology shown in Figure 2.
+When a packet arrives on interface ge-0/0/5, it is identified
+as belonging to the ls-product-design logical system. 
+
+Because ge-0/0/5 belongs to the pd-vr1 routing instance,
+route lookup is performed in pd-vr1 with pd-vr2 identified as the
+next hop.
+
+ A second route lookup is performed in pd-vr2 to identify
+the egress interface to use—in this case— ge-0/0/8. 
+
+The packet is sent out ge-0/0/8 to the network. 
+
+The security policy lookup is performed in ls-product-design,
+and one session is established. 
+
+
+Pass-Through Traffic Between Logical SystemsPass-through traffic between logical systems is complicated
+by fact that each logical system has an ingress and an egress interface
+that the traffic must transit. It is as if traffic were coming into
+and going out from two devices. 
+Two sessions must be established for pass-through traffic between
+logical systems. (Note that policy lookup is performed in both logical
+systems).
+On the incoming logical system, one session is set up
+between the ingress interface (a physical interface) and its egress
+interface (an lt-0/0/0 interface).
+
+On the egress logical system, another session is set up
+between the ingress interface (the lt-0/0/0 interface of the second
+logical system) and its egress interface (a physical interface). 
+
+
+Consider how pass-through traffic is handled across logical
+systems in the topology shown in Figure 2.
+A session is established in the incoming logical system.
+When a packet arrives on interface ge-0/0/5, it is identified
+as belonging to the ls-product-design logical system.
+
+Because ge-0/0/5 belongs to the pd-vr1 routing instance,
+route lookup is performed in pd-vr1. 
+
+As a result of the lookup, the egress interface for the
+packet is identified as lt-0/0/0.3 with the next hop identified as
+lt-0/0/0.5, which is the ingress interface in the ls-marketing-dept. 
+
+A session is established between ge-0/0/5 and lt-0/0/0.3. 
+
+
+
+A session is established in the outgoing logical system.
+The packet is injected into the flow again from lt-0/0/0.5,
+and the logical system context identified as ls-marketing-dept is
+derived from the interface. 
+
+Packet processing continues in the ls-marketing-dept logical
+system.
+
+To identify the egress interface, route lookup for the
+packet is performed in the mk-vr1 routing instances. 
+
+The outgoing interface is identified as ge-0/0/6, and
+the packet is transmitted from the interface to the network.
+
+
+
+
+
+Handling Self-TrafficSelf-traffic is traffic that originates in a logical system
+on the device and is either sent out to the network from that logical
+system or is terminated on another logical system on the device. 
+Self-Initiated Traffic
+Traffic Terminated on a Logical System
+
+Self-Initiated TrafficSelf-initiated traffic is generated from a source logical system
+context and forwarded directly to the network from the logical system
+interface. 
+The following process occurs:
+When a packet is generated in a logical system, a process
+for handling the traffic is started in the logical system.
+
+Route lookup is performed to identify the egress interface,
+and a session is established.
+
+The logical system performs a policy lookup and processes
+the traffic accordingly.
+
+ If required, a management session is set up.
+
+
+Consider how self-initiated traffic is handled across logical
+systems given the topology shown in Figure 2.
+A packet is generated in the ls-product-design logical
+system, and a process for handling the traffic is started in the logical
+system.
+
+Route lookup performed in pd-vr2 to identifies the egress
+interface as ge-0/0/8.
+
+A session is established.
+
+The packet is transmitted to the network from ge-0/0/8.
+
+
+Traffic Terminated on a Logical SystemWhen a packet enters the device on an interface belonging to
+a logical system and the packet is destined for another logical system
+on the device, the packet is forwarded between the logical systems
+in the same manner as is pass-through traffic. However, route lookup
+in the second logical system identifies the local egress interface
+as the packet destination. Consequently the packet is terminated on
+the second logical system as self-traffic. 
+For terminated self-traffic, two policy lookups are performed,
+and two sessions are established.
+On the incoming logical system, one session is set up
+between the ingress interface (a physical interface) and its egress
+interface (an lt-0/0/0 interface).
+
+On the destination logical system, another session is
+set up between the ingress interface (the lt-0/0/0 interface of the
+second logical system) and the local interface. 
+
+
+
+
+Consider how terminated self-traffic is handled across logical
+systems in the topology shown in Figure 2.
+A session is established in the incoming logical system.
+When a packet arrives on interface ge-0/0/5, it is identified
+as belonging to the ls-product-design logical system.
+
+Because ge-0/0/5 belongs to the pd-vr1 routing instance,
+route lookup is performed in pd-vr1. 
+
+As a result of the lookup, the egress interface for the
+packet is identified as lt-0/0/0.3 with the next hop identified as
+lt-0/0/0.5, the ingress interface in the ls-marketing-dept. 
+
+A session is established between ge-0/0/5 and lt-0/0/0.3. 
+
+
+
+A management session is established in the destination
+logical system.
+The packet is injected into the flow again from lt-0/0/0.5,
+and the logical system context identified as ls-marketing-dept is
+derived from the interface. 
+
+Packet processing continues in the ls-marketing-dept logical
+system.
+
+Route lookup for the packet is performed in the mk-vr1
+routing instance. The packet is terminated in the destination logical
+system as self-traffic.
+
+A management session is established. 
+
+
+
+
+
+Understanding Session and Gate Limitation ControlThe logical systems flow module provides session and gate limitation
+to ensure that these resources are shared fairly among the logical
+systems. Resources allocation and limitations for each logical system
+are specified in the security profile bound to the logical system. 
+ For session limiting, the system checks the first packet
+of a session against the maximum number of sessions configured for
+the logical system. If the maximum is reached, the device drops the
+packet and logs the event.
+
+ For gate limiting, the device checks the first packet
+of a session against the maximum number of gates configured for the
+logical system. If the maximum number of gates for a logical system
+is reached, the device rejects the gate open request and logs the
+event.
+
+
+
+Understanding SessionsSessions are created based on routing and other classification
+information to store information and allocate resources for a flow.
+You can change some characteristics of sessions, such as when a session
+is terminated. For example, you might want to ensure that a session
+table is never entirely full to protect against an attacker’s
+attempt to flood the table and thereby prevent legitimate users from
+starting sessions. 
+
+About Configuring SessionsDepending on the protocol and service, a session is programmed
+with a timeout value. For example, the default timeout for TCP is
+1800 seconds. The default timeout for UDP is 60 seconds. When a flow
+is terminated, it is marked as invalid, and its timeout is reduced
+to 10 seconds. If no traffic uses the If no traffic uses the session
+before the service timeout, the session is aged out and freed to a
+common resource pool for reuse. 
+You can affect the life of a session in the following ways:
+Age out sessions, based on how full the session table
+is.
+
+Set an explicit timeout for aging out TCP sessions.
+
+Configure a TCP session to be invalidated when it receives
+a TCP RST (reset) message.
+
+
+You can configure sessions to accommodate other systems
+as follows:
+Disable TCP packet security checks.
+
+Change the maximum segment size.
+
+
+
+
+
+
+See AlsoUnderstanding the Interconnect Logical System and
+Logical Tunnel Interfaces
+Understanding Logical Systems for SRX Series Services
+Gateways
+
+Logical Systems and Tenant Systems support for vSRX Virtual Firewall and vSRX Virtual
+            Firewall 3.0 Instances
+Starting in Junos OS Release 20.1R1, you can configure logical systems and tenant systems on vSRX
+                Virtual Firewall and vSRX Virtual Firewall 3.0 instances.
+Configuring each logical systems creates an extra routing
+protocol process (RPD), which is cpu and memory intensive. Starting
+in Junos OS Release 20.1R1-
+vSRX Virtual Firewall and vSRX3.0 instances with a memory capacity of less than 16GB support one
+                        root logical system. 
+
+vSRX Virtual Firewall and vSRX3.0 instances with a memory capacity of 16GB or more supports
+                        logical systems but limits the logical systems to eight.
+
+
+Table 1 describes the number of logical systems and tenant systems supported on different
+                memory capacities for vSRX Virtual Firewall and vSRX Virtual Firewall 3.0.
+
+Table 1:  Logical Systems and Tenant Systems supported on different Memory Capacities for vSRX Virtual
+                    Firewall and vSRX Virtual Firewall 3.0.Type
+
+4GB
+
+8GB
+
+16GB or more
+
+
+
+Logical systems (includes the root logical system)
+
+1
+
+1
+
+8
+
+
+Tenant systems
+
+0
+
+0
+
+42
+
+
+Logical systems + Tenant systems (includes the root logical
+system).
+
+1
+
+1
+
+50
+
+
+
+
+
+Note: Only vSRX Virtual Firewall 3.0 instances support flexible security profiles based on the device
+                    memory. The maximum number of supported security profiles on vSRX Virtual
+                    Firewall 3.0 is related to its memory. For more information, see Security Profiles for Logical Systems.
+
+Use the following command at the [edit] hierarchy level to ensure that there are
+                at least two CPUs in the Routing Engine of vSRX Virtual Firewall and vSRX3.0
+                instances: set security forwarding-options resource-manager cpu re
+                    2.
+
+See AlsoLogical Systems Overview
+Tenant Systems Overview
+
+Release History TableReleaseDescription20.3R3Starting in Junos OS Releases 20.3R3, 20.4R2, 21.1R2, and 21.2R1, you
+               can use the features for logical systems and tenant systems without a
+               license.18.3R1Starting in Junos OS Release 18.3R1, an SRX Series Firewall running
+               logical systems or tenant systems includes three licenses by
+               default.
